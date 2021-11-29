@@ -28,6 +28,8 @@ namespace PlatformService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("InMem"));   // fine to use mem db for testing
+
+            services.AddScoped<IPlatformRepo, PlatformRepo>();  // if asked for IPlatformRepo then provide a PlatformRepo
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
