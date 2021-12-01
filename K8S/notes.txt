@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: platforms-depl
+spec:
+  replicas: 1
+  selector:   # selects the template we are createing
+    matchLabels:
+      app: platformservice
+  template: # define what we are deploying
+    metadata:
+      labels:
+        app: platformservice
+    spec:
+      containers:
+        - name: platformservice
+          image: sardox/platformservice:latest    ## the actual docker image to deploy
+
+
+Deploy the file with:
+kubectl apply -f .\platforms-depl.yaml
+Check deployment:
+kubectl get deployments
+kubectl get pods
+
