@@ -20,3 +20,9 @@ COPY --from=bulid-env /app/out .
 ENTRYPOINT [ "dotnet", "PlatformService.dll" ]
 
 # To build the image use "docker build -t <your Docker id>/platformservice ."
+# To run the container use 'docker run -p 8080:80 -d <your Docker id>/platformservice'
+# to send the image to DockerHub use 'docker push <your Docker id>/platformservice'
+# Other useful commands:
+# "docker ps"               get a list of running containers
+# "docker stop <id>"        stop a container by id (from the ps cmd)
+# "docker start <id>"       restart a container by id (from the ps cmd)
