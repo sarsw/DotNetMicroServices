@@ -22,4 +22,6 @@ kubectl apply -f .\platforms-depl.yaml
 Check deployment:
 kubectl get deployments
 kubectl get pods
+kubectl get services
+kubectl delete deployment platform-depl
 
