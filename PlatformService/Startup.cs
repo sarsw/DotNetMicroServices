@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using PlatformService.Data;
+using PlatformService.SyncDataServices.Http;
 
 namespace PlatformService
 {
@@ -30,6 +31,9 @@ namespace PlatformService
             services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("InMem"));   // fine to use mem db for testing
 
             services.AddScoped<IPlatformRepo, PlatformRepo>();  // if asked for IPlatformRepo then provide a PlatformRepo
+
+            services.AddHttpClient<ICommandDataClient, HttpCommandDataClient>();    // make use of http clienat factory, when asked for a ICommandDC, provide a HCDC
+
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddSwaggerGen(c =>
