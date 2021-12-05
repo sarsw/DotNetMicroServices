@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -25,7 +26,6 @@ namespace PlatformService.SyncDataServices.Http
 
             // post async request
             var response = await _httpClient.PostAsync($"{_cfg["CommandService"]}", httpContent);
-
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine("Sync posted to cmd service OK");

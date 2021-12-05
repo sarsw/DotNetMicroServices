@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using PlatformService.Data;
 using PlatformService.Dtos;
 using PlatformService.Models;
+using PlatformService.SyncDataServices.Http;
 
 namespace PlatformService.Controllers
 {
@@ -13,13 +15,17 @@ namespace PlatformService.Controllers
     public class PlatformsController : ControllerBase       // use the API Base
     {
         private readonly IPlatformRepo _repo;
+        private IMapper _mapper { get; }
+        private readonly ICommandDataClient _commandDataClient;
 
-        public IMapper _mapper { get; }
-
-        public PlatformsController(IPlatformRepo repo, IMapper mapper)
+        public PlatformsController(IPlatformRepo repo, 
+            IMapper mapper,
+            ICommandDataClient commandDataClient)
         {
+            // Inject a few useful instances of objects needed here, such as the Command Data Client
             _repo = repo;
             _mapper = mapper;
+            _commandDataClient = commandDataClient;
         }
 
         // simple action to get all platforms
@@ -50,7 +56,7 @@ namespace PlatformService.Controllers
         }
 
         [HttpPost]
-        public ActionResult<PlatformReadDto> CreatePlatform(PlatformCreateDto platformCreateDto)        // REST expects something back for a create so give a DTO
+        public async Task<ActionResult<PlatformReadDto>> CreatePlatform(PlatformCreateDto platformCreateDto)        // REST expects something back for a create so give a DTO
         {
             var platformModel = _mapper.Map<Platform/*to*/>(platformCreateDto/*from*/);     // as defined in the automapping setup profile
             _repo.CreatePlatform(platformModel);
@@ -58,6 +64,12 @@ namespace PlatformService.Controllers
             
             // use automapper from model to dto
             var platformReadDto = _mapper.Map<PlatformReadDto/*to*/>(platformModel/*from*/);
+
+            try {
+                await _commandDataClient.SendPlatformToCommand(platformReadDto);    // could be long running so need to do this aynchronously
+            } catch (Exception e) {
+                Console.WriteLine($"Error {e.Message} in CreatePlatform when SendPlatformToCommand used");                
+            }
 
             // return a http 201 with a route uri location to get the item - let's be REST compliant! Example uri https://localhost:5001/api/Platforms/4
             return CreatedAtRoute(nameof(GetPlatformById/*the Named api above!*/), new { Id = platformReadDto.Id}/*generate an id*/, platformReadDto/*the body payload*/);
