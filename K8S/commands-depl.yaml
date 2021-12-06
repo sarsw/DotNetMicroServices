@@ -1,32 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: platforms-depl
+  name: commands-depl
 spec:
   replicas: 1
   selector:   # selects the template we are createing
     matchLabels:
-      app: platformservice
+      app: commandservice
   template: # define what we are deploying
     metadata:
       labels:
-        app: platformservice
+        app: commandservice
     spec:
       containers:
-        - name: platformservice
-          image: sardox/platformservice:latest    ## the actual docker image to deploy
+        - name: commandservice
+          image: sardox/commandservice:latest    ## the actual docker image to deploy
 ---
 ## define the cluster service IPs we'll use to allow service to communicate on their private LAN
 apiVersion: v1
 kind: Service
 metadata:
-  name: platforms-clusterip-srv
+  name: commands-clusterip-srv
 spec:
   type: ClusterIP
   selector:
-    app: platformservice
+    app: commandservice
   ports:
-  - name: platformservice
+  - name: commandservice
     protocol: TCP
     port: 80
     targetPort: 80

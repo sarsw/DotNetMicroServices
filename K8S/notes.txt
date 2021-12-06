@@ -22,6 +22,8 @@ kubectl apply -f .\platforms-depl.yaml
 Check deployment:
 kubectl get deployments
 kubectl get pods
+## find the service and their associated IP addresses, i.e. the NodePort is likely the one to use to communicate with applications outside K8S
 kubectl get services
 kubectl delete deployment platform-depl
-
+## for a refresh 
+kubectl rollout restart deployment platforms-depl
