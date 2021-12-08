@@ -34,3 +34,5 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/cont
 kubectl get namespace
 kubectl get pods --namespace=ingress-nginx
 
+#To see Persistent Volume Claims (local disk storage)
+kubectl get pvc
