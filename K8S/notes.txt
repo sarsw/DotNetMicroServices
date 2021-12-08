@@ -27,3 +27,10 @@ kubectl get services
 kubectl delete deployment platform-depl
 ## for a refresh 
 kubectl rollout restart deployment platforms-depl
+
+#Getting nginx gateway (https://kubernetes.github.io/ingress-nginx/deploy/)
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.1.0/deploy/static/provider/cloud/deploy.yaml
+
+kubectl get namespace
+kubectl get pods --namespace=ingress-nginx
+
