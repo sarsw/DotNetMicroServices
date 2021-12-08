@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-srv
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+spec:
+  rules:  ## the host name needs to be in your local hosts's host file
+    - host: frog.com
+      http: ## single routing rule
+        paths:
+          - path: /api/platforms
+            pathType: Prefix
+            backend:
+              service:  ## from platforms depl
+                name: platforms-clusterip-srv
+                port:
+                  number: 80
+          - path: /api/c/platforms    ## command service route set to be different to the platform service
+            pathType: Prefix
+            backend:
+              service:
+                name: commands-clusterip-srv
+                port:
+                  number: 80
