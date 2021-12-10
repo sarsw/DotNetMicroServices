@@ -25,16 +25,16 @@ namespace PlatformService
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // if (_env.IsProduction()) // comment this out to force MSSQL when doing the initial migration with "dotnet ef"
+            if (_env.IsProduction()) // comment this out to force MSSQL when doing the initial migration with "dotnet ef"
             {
                 Console.WriteLine("Uses MSSQL DB in prod mode");
                 services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("PlatformsConn")));   // fine to use mem db for testing
             }
-            // else
-            // {
-            //     Console.WriteLine("Uses memDB in dev mode");
-            //     services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("InMem"));   // fine to use mem db for testing
-            // }
+            else
+            {
+                Console.WriteLine("Uses memDB in dev mode");
+                services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("InMem"));   // fine to use mem db for testing
+            }
 
             services.AddScoped<IPlatformRepo, PlatformRepo>();  // if asked for IPlatformRepo then provide a PlatformRepo
 
@@ -70,7 +70,7 @@ namespace PlatformService
                 endpoints.MapControllers();
             });
 
-//            PrepDb.PrepPopulation(app, _env.IsProduction());      // comment out for DB migration
+            PrepDb.PrepPopulation(app, _env.IsProduction());      // comment out for DB migration
         }
     }
 }

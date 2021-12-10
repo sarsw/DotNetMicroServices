@@ -25,7 +25,7 @@ kubectl get pods
 ## find the service and their associated IP addresses, i.e. the NodePort is likely the one to use to communicate with applications outside K8S
 kubectl get services
 kubectl delete deployment platform-depl
-## for a refresh 
+## for a refresh (do this after deploying new code)
 kubectl rollout restart deployment platforms-depl
 
 #Getting nginx gateway (https://kubernetes.github.io/ingress-nginx/deploy/)
