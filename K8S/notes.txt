@@ -34,5 +34,15 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/cont
 kubectl get namespace
 kubectl get pods --namespace=ingress-nginx
 
-#To see Persistent Volume Claims (local disk storage)
+#To see Persistent Volume Claims (local disk storage) [create using a deploy yaml]
 kubectl get pvc
+
+## create a secret
+kubectl create secret generic mssql --from-literal=SA_PASSWORD="<password>"
+
+## delete a pod
+kubectl delete deployment [--all] <deply name>
+kubectl delete pod [--all] <pod name>
+
+## delte pvc (make sure it's not being used)
+kubectl delete pvc [--all] <pvc name>
