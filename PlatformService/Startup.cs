@@ -14,16 +14,27 @@ namespace PlatformService
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public IConfiguration Configuration { get; }
+
+        private readonly IWebHostEnvironment _env;
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)       // inject some useful items
         {
             Configuration = configuration;
+            _env = env;
         }
-
-        public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("InMem"));   // fine to use mem db for testing
+            if (_env.IsProduction())
+            {
+                Console.WriteLine("Uses MSSQL DB in prod mode");
+                services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("PlatformsConn")));   // fine to use mem db for testing
+            }
+            else
+            {
+                Console.WriteLine("Uses memDB in dev mode");
+                services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("InMem"));   // fine to use mem db for testing
+            }
 
             services.AddScoped<IPlatformRepo, PlatformRepo>();  // if asked for IPlatformRepo then provide a PlatformRepo
 
