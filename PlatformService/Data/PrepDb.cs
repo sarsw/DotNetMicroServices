@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PlatformService.Models;
 
@@ -8,17 +9,27 @@ namespace PlatformService.Data
 {
     public static class PrepDb
     {
-        public static void PrepPopulation(IApplicationBuilder app)
+        public static void PrepPopulation(IApplicationBuilder app, bool isProd)
         {
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
                 // normally db context would come from ctor dep inj
-                SeedData(serviceScope.ServiceProvider.GetService<AppDbContext>());
+                SeedData(serviceScope.ServiceProvider.GetService<AppDbContext>(), isProd);
             }
         }
 
-        private static void SeedData(AppDbContext ctx)
+        private static void SeedData(AppDbContext ctx, bool isProd)
         {
+            if (isProd) // determine runtime mode
+            {
+                Console.WriteLine("Trying to do DB migration....");
+                try {
+                    ctx.Database.Migrate();
+                } catch (Exception e) {
+                    Console.WriteLine($"DB Migration failed {e.Message}");
+                }
+            }
+
             if (!ctx.Platforms.Any())   // if empty
             {
                 Console.WriteLine("Populating DB");
