@@ -5,7 +5,7 @@ using CommandsService.Data;
 using CommandsService.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CommandsService 
+namespace CommandsService.Controllers
 {
     [Route("api/c/[controller]")]   // make this route different to PlatformService (easier when using with a gateway)
     [ApiController]
