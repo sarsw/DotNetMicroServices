@@ -1,4 +1,8 @@
 using System;
+using System.Collections.Generic;
+using AutoMapper;
+using CommandsService.Data;
+using CommandsService.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CommandsService 
@@ -7,11 +11,26 @@ namespace CommandsService
     [ApiController]
     public class PlatformsController : ControllerBase 
     {
-        public PlatformsController()
+        private readonly ICommandRepo _repo;
+        private readonly IMapper _mapper;
+
+        public PlatformsController(ICommandRepo repo, 
+            IMapper mapper)
         {
-            
+            // Inject a few useful instances of objects needed here, such as the Command Data Client
+            _repo = repo;
+            _mapper = mapper;
         }
 
+        [HttpGet]
+        public ActionResult<IEnumerable<PlatformReadDto>> GetPlatforms()        // GET /api/c/platforms
+        {
+            Console.WriteLine("Getting platforms from CommandsService");
+            var platformItems = _repo.GetAllPlatforms();
+
+            return Ok(_mapper.Map<IEnumerable<PlatformReadDto/*map to dto*/>>(platformItems/*src platform*/));
+        }
+        
         [HttpPost]
         public ActionResult TestInboundConnection()
         {
