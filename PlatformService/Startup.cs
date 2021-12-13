@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using PlatformService.AsyncDataServices;
 using PlatformService.Data;
 using PlatformService.SyncDataServices.Http;
 
@@ -40,6 +41,8 @@ namespace PlatformService
 
             services.AddHttpClient<ICommandDataClient, HttpCommandDataClient>();    // make use of http clienat factory, when asked for a ICommandDC, provide a HCDC
 
+            services.AddSingleton<IMessageBusClient, MessageBusClient>();
+            
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddSwaggerGen(c =>
