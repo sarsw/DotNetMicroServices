@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CommandsService.Data;
+using CommandsService.EventProcessing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -31,6 +32,7 @@ namespace CommandsService
             services.AddScoped<ICommandRepo, CommandRepo>();  // if asked for ICommandRepo then provide a concrete class CommandRepo
 
             services.AddControllers();
+            services.AddSingleton<IEventProcessor, EventProcessor>();   // they ask for an I type & get a convrete EventProcessor
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());// prep to allow am to be injected
             services.AddSwaggerGen(c =>
             {
