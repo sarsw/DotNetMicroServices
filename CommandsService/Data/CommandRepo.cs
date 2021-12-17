@@ -34,6 +34,11 @@ namespace CommandsService.Data
             _ctx.Platforms.Add(plat);
         }
 
+        public bool ExternalPlatformExists(int extPlatformId)
+        {
+            return _ctx.Platforms.Any(p => p.ExternalId == extPlatformId);
+        }
+
         public IEnumerable<Platform> GetAllPlatforms()  // used via GET /api/c/platforms/
         {
             return _ctx.Platforms.ToList();
