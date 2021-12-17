@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using PlatformService.AsyncDataServices;
 using PlatformService.Data;
 using PlatformService.Dtos;
 using PlatformService.Models;
@@ -17,15 +18,18 @@ namespace PlatformService.Controllers
         private readonly IPlatformRepo _repo;
         private IMapper _mapper { get; }
         private readonly ICommandDataClient _commandDataClient;
+        private readonly IMessageBusClient _msgBusClient;
 
         public PlatformsController(IPlatformRepo repo, 
             IMapper mapper,
-            ICommandDataClient commandDataClient)
+            ICommandDataClient commandDataClient,
+            IMessageBusClient msgBusClient)
         {
             // Inject a few useful instances of objects needed here, such as the Command Data Client
             _repo = repo;
             _mapper = mapper;
             _commandDataClient = commandDataClient;
+            _msgBusClient = msgBusClient;
         }
 
         // simple action to get all platforms
@@ -65,10 +69,21 @@ namespace PlatformService.Controllers
             // use automapper from model to dto
             var platformReadDto = _mapper.Map<PlatformReadDto/*to*/>(platformModel/*from*/);
 
+            // send Sync msg
             try {
                 await _commandDataClient.SendPlatformToCommand(platformReadDto);    // could be long running so need to do this aynchronously
             } catch (Exception e) {
-                Console.WriteLine($"Error {e.Message} in CreatePlatform when SendPlatformToCommand used");                
+                Console.WriteLine($"Error {e.Message} in CreatePlatform Sync when SendPlatformToCommand used");                
+            }
+
+            // send ASync msg
+            try {
+                var platformPublishedDto = _mapper.Map<PlatformPublishedDto>(platformReadDto);
+                platformPublishedDto.Event = "Platform_Published";          // need to add in Event
+                _msgBusClient.PublishNewPlatform(platformPublishedDto);     // go tell the world
+                await _commandDataClient.SendPlatformToCommand(platformReadDto);    // could be long running so need to do this aynchronously
+            } catch (Exception e) {
+                Console.WriteLine($"Error {e.Message} in CreatePlatform Async when SendPlatformToCommand used");                
             }
 
             // return a http 201 with a route uri location to get the item - let's be REST compliant! Example uri https://localhost:5001/api/Platforms/4
