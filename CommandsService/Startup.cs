@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CommandsService.AsyncDataServices;
 using CommandsService.Data;
 using CommandsService.EventProcessing;
 using Microsoft.AspNetCore.Builder;
@@ -32,6 +33,9 @@ namespace CommandsService
             services.AddScoped<ICommandRepo, CommandRepo>();  // if asked for ICommandRepo then provide a concrete class CommandRepo
 
             services.AddControllers();
+
+            services.AddHostedService<MessageBusSubscriber>();  // setup message handling (allow dep inj too)
+
             services.AddSingleton<IEventProcessor, EventProcessor>();   // they ask for an I type & get a convrete EventProcessor
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());// prep to allow am to be injected
             services.AddSwaggerGen(c =>
