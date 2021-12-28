@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option csharp_namespace = "PlatformService";
+
+// this is the rpc entry point to get a list of platforms - this file defines the contract between server and client
+service GrpcPlatform {
+    rpc GetAllPlatforms (GetAllRequest)  returns (PlatformResponse);
+}
+
+message GetAllRequest {};    // do not need any parameters to get all platforms
+
+message GrpcPlatformModel {
+    int32 platformId = 1;   // start at position 1
+    string name = 2;
+    string publisher = 3;
+}
+
+message PlatformResponse {
+    repeated GrpcPlatformModel platform = 1;
+}
