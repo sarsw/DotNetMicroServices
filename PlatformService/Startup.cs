@@ -1,7 +1,9 @@
 using System;
+using System.IO;
 using System.Net;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using PlatformService.AsyncDataServices;
 using PlatformService.Data;
+using PlatformService.SyncDataServices.Grpc;
 using PlatformService.SyncDataServices.Http;
 
 namespace PlatformService
@@ -43,6 +46,8 @@ namespace PlatformService
 
             services.AddSingleton<IMessageBusClient, MessageBusClient>();
             
+            services.AddGrpc();
+
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddSwaggerGen(c =>
@@ -71,6 +76,14 @@ namespace PlatformService
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapGrpcService<GrpcPlatformService>();
+
+                // serve up the proto contract to clients
+                string protoFile = "Protos/platforms.proto";
+                endpoints.MapGet("/"+protoFile.ToLower(), async context =>
+                {
+                    await context.Response.WriteAsync(File.ReadAllText(protoFile));
+                });
             });
 
             PrepDb.PrepPopulation(app, _env.IsProduction());      // comment out for DB migration
