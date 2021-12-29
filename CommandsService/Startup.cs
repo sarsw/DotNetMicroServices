@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CommandsService.AsyncDataServices;
 using CommandsService.Data;
 using CommandsService.EventProcessing;
+using CommandsService.SyncDataServices.Grpc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -38,6 +39,9 @@ namespace CommandsService
 
             services.AddSingleton<IEventProcessor, EventProcessor>();   // they ask for an I type & get a convrete EventProcessor
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());// prep to allow am to be injected
+            
+            services.AddScoped<IPlatformDataClient, PlatformDataClient>();
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CommandsService", Version = "v1" });
