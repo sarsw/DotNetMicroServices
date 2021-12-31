@@ -4,19 +4,19 @@ This tutorial uses a simple database with a C# api scenerio to introduce:
 
 - Kubernetes (K8S)
 - Nginx
--Microservices
--Docker / Dockerhub
--MS SQL
--REST API
--RabbitMQ
--gRPC and
--Entityframework Core
+- Microservices
+- Docker / Dockerhub
+- MS SQL
+- REST API
+- RabbitMQ
+- gRPC and
+- Entityframework Core
 
 Tooling:
-VS Code,
-MSSQL Management Studio,
-Postman (& some Insomnia) and 
-Docker desktop (with K8S)
+- VS Code,
+- MSSQL Management Studio,
+- Postman (& some Insomnia) and 
+- Docker desktop (with K8S)
 
 Highly recommended. 
 
