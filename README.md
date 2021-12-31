@@ -15,8 +15,8 @@ This tutorial uses a simple database with a C# api scenerio to introduce:
 - Entityframework Core
 
 Tooling:
-- VS Code,
-- MSSQL Management Studio,
+- VS Code
+- MSSQL Management Studio
 - Postman (& some Insomnia) and 
 - Docker desktop (with K8S)
 
