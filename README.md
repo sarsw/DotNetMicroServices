@@ -2,8 +2,8 @@ I followed this https://youtu.be/DgVjEo3OGBI in its entirety.
 
 This tutorial uses a simple database with a C# api scenerio to introduce:
 
--Kubernetes (K8S)
--Nginx
+- Kubernetes (K8S)
+- Nginx
 -Microservices
 -Docker / Dockerhub
 -MS SQL
